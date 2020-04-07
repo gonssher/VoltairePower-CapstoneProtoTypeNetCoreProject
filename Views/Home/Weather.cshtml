@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Weather";
+}
+<script type="text/javascript">
+
+    var calls = 0;
+    var interval;
+
+    function GetWeather() {
+        var cityname = $("#txtCity").val();
+
+        if (cityname.length > 0) {
+            var request = new XMLHttpRequest();
+
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+
+                    var data = JSON.parse(this.responseText);
+                    document.getElementById("lblCity").innerHTML = data.City
+                    document.getElementById("lblCountry").innerHTML = data.Country
+                    document.getElementById("lblTimezone").innerHTML = data.Timezone
+                    document.getElementById("lblMain").innerHTML = data.Main
+                    document.getElementById("lblDescription").innerHTML = data.Description
+                    document.getElementById("lblHumidity").innerHTML = data.Humidity
+                    document.getElementById("lblTempFeelsLike").innerHTML = data.FeelsLike
+                    document.getElementById("lblTemp").innerHTML = data.Temperature
+                    document.getElementById("lblTempMax").innerHTML = data.Temp_Max
+                    document.getElementById("lblTempMin").innerHTML = data.Temp_Min
+
+                    calls++;
+                }
+            };
+
+            request.open('GET', "https://localhost:44313/api/Values?City=" + cityname, true);
+            request.send();
+
+            if (calls == 0) {
+                interval = setInterval(function () { document.getElementById("btnSubmit").click(); }, 5000);
+            }
+        }
+        else {
+            clearInterval(interval);
+            if (calls == 0) {
+                alert("City Not Found");
+            }
+            calls = 0;
+        }
+    }
+
+
+
+</script>
+<h2>Search City and Get Weather Forecast</h2>
+
+<div>
+    <table>
+        <tr>
+            <td><strong>City Name  :</strong></td>
+            <td><input id="txtCity" type="text" /></td>
+        </tr>
+    </table>
+    <br />
+    <button id="btnSubmit" onclick="GetWeather()">
+        Get Weather Forecast
+    </button>
+</div>
+<div>
+    <h2>Weather Forecast</h2>
+    <table>
+        <tr>
+            <td><strong>City: </strong></td>
+            <td>
+                <span id="lblCity"></span> ,
+                <span id="lblCountry"></span>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Timezone: </strong></td>
+            <td><label id="lblTimezone"></label></td>
+        </tr>
+        <tr>
+            <td><strong>Main: </strong></td>
+            <td><label id="lblMain"></label></td>
+        </tr>
+        <tr>
+            <td><strong>Description:</strong></td>
+            <td><label id="lblDescription"></label></td>
+        </tr>
+        <tr>
+            <td><strong>Humidity:</strong></td>
+            <td><label id="lblHumidity"></label></td>
+        </tr>
+        <tr>
+            <td>Feels Like: </td>
+            <td><label id="lblTempFeelsLike"></label></td>
+        </tr>
+        <tr>
+            <td>Temperature: </td>
+            <td><label id="lblTemp"></label></td>
+        </tr>
+        <tr>
+            <td>Temperature (Min):</td>
+            <td><label id="lblTempMin"></label></td>
+        </tr>
+        <tr>
+            <td>Temperature (Max):</td>
+            <td><label id="lblTempMax"></label></td>
+        </tr>
+    </table>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
