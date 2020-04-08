@@ -36,13 +36,35 @@ namespace VoltairePower
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
 
+
             // Add framework services
             services.AddMvc();
 
             services.AddControllersWithViews();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "BookListAPI",
+                    Description = "A simple example ASP.NET Core Web API",
+                    TermsOfService = new Uri("https://CompanysWebsite.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Mahboob Ali",
+                        Email = string.Empty,
+                        Url = new Uri("https://CompanysWebsite.com"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under MY Company Licence",
+                        Url = new Uri("https://CompanysWebsite.com/license"),
+                    }
+                });
 
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Customer API", Version = "v1" }); });
 
+
+            });
 
 
         }
@@ -61,7 +83,7 @@ namespace VoltairePower
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseSwagger();
+            //app.UseSwagger();
             app.UseDefaultFiles();
             app.UseSwaggerUI(c =>{c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Customer API");});
             app.UseStaticFiles();
